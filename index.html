@@ -513,7 +513,7 @@
       }
     }
 
-    /* Tree-Born Falling Petals - Autumn Leaf Swaying Physics */
+    /* Tree-Born Falling Flowers - Natural Autumn Drift & Graceful Twirl */
     .tree-petals-container {
       position: absolute;
       inset: 0;
@@ -522,48 +522,68 @@
       z-index: 25;
     }
 
+    .falling-flower,
     .petal {
       position: absolute;
       pointer-events: none;
       will-change: transform, opacity;
-      animation: treePetalFall linear forwards;
-      box-shadow: 0 2px 8px rgba(180, 100, 210, 0.28);
+      animation: treeFlowerFall linear forwards;
     }
 
-    @keyframes treePetalFall {
+    .falling-flower .flower-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform-origin: center center;
+      animation: flowerTwirl var(--twirl-dur, 5.5s) linear infinite;
+      filter: drop-shadow(0 2px 6px rgba(180, 100, 210, 0.35));
+    }
+
+    @keyframes treeFlowerFall {
       0% {
         opacity: 0;
-        transform: translate3d(0, 0, 0) scale(0.65) rotate(0deg);
+        transform: translate3d(0, 0, 0) scale(0.65);
       }
 
       8% {
-        opacity: 0.95;
-        transform: translate3d(calc(var(--sway) * 0.25), calc(var(--fall-dist) * 0.08), 0) scale(1) rotate(16deg);
+        opacity: 0.96;
+        transform: translate3d(calc(var(--sway) * 0.25), calc(var(--fall-dist) * 0.08), 0) scale(1);
       }
 
       28% {
-        opacity: 0.95;
-        transform: translate3d(calc(var(--sway) * 0.95), calc(var(--fall-dist) * 0.28), 0) scale(1.04) rotate(32deg);
+        opacity: 0.96;
+        transform: translate3d(calc(var(--sway) * 0.95), calc(var(--fall-dist) * 0.28), 0) scale(1.03);
       }
 
       52% {
-        opacity: 0.92;
-        transform: translate3d(calc(var(--sway) * -0.85), calc(var(--fall-dist) * 0.52), 0) scale(0.96) rotate(-26deg);
+        opacity: 0.93;
+        transform: translate3d(calc(var(--sway) * -0.85), calc(var(--fall-dist) * 0.52), 0) scale(0.97);
       }
 
       76% {
         opacity: 0.90;
-        transform: translate3d(calc(var(--sway) * 1.1), calc(var(--fall-dist) * 0.78), 0) scale(1.02) rotate(24deg);
+        transform: translate3d(calc(var(--sway) * 1.1), calc(var(--fall-dist) * 0.76), 0) scale(1.02);
       }
 
       92% {
         opacity: 0.75;
-        transform: translate3d(calc(var(--sway) * 0.1), calc(var(--fall-dist) * 0.92), 0) scale(0.98) rotate(-12deg);
+        transform: translate3d(calc(var(--sway) * 0.1), calc(var(--fall-dist) * 0.92), 0) scale(0.96);
       }
 
       100% {
         opacity: 0;
-        transform: translate3d(calc(var(--sway) * 0.35 + 20px), var(--fall-dist), 0) scale(0.9) rotate(15deg);
+        transform: translate3d(calc(var(--sway) * 0.35 + 15px), var(--fall-dist), 0) scale(0.9);
+      }
+    }
+
+    @keyframes flowerTwirl {
+      0% {
+        transform: rotate(var(--start-rot, 0deg));
+      }
+
+      100% {
+        transform: rotate(calc(var(--start-rot, 0deg) + var(--twirl-dir, 1) * 360deg));
       }
     }
 
@@ -794,6 +814,44 @@
       <canvas id="treeCanvas" width="520" height="575"></canvas>
       <div class="sparkles-container" id="sparklesContainer" aria-hidden="true"></div>
       <div class="tree-petals-container" id="treePetalsContainer" aria-hidden="true"></div>
+
+      <!-- Falling Flowers SVG Asset Definitions -->
+      <svg width="0" height="0" style="position: absolute; pointer-events: none; opacity: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+          <!-- Flower Petal Color Gradients (Matching Tree Palette: Lavender, Pink, Lilac, White, Rose-Lavender) -->
+          <linearGradient id="fall-grad-lavender" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="48%" stop-color="#e9d5ff"/>
+            <stop offset="100%" stop-color="#c084fc"/>
+          </linearGradient>
+          <linearGradient id="fall-grad-pink" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="48%" stop-color="#fbcfe8"/>
+            <stop offset="100%" stop-color="#f472b6"/>
+          </linearGradient>
+          <linearGradient id="fall-grad-lilac" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#f5d0fe"/>
+            <stop offset="50%" stop-color="#d8b4e2"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+          <linearGradient id="fall-grad-white" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="65%" stop-color="#faf5ff"/>
+            <stop offset="100%" stop-color="#ede9fe"/>
+          </linearGradient>
+          <linearGradient id="fall-grad-rose" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="45%" stop-color="#f0abfc"/>
+            <stop offset="100%" stop-color="#c026d3"/>
+          </linearGradient>
+
+          <!-- Flower Petal Shapes matching Canvas Flowers -->
+          <!-- Sakura notch petal -->
+          <path id="fall-petal-notch" d="M 0 0 C -9 -7, -11 -16, -5 -20 C -2 -21, 0 -19, 0 -18.4 C 0 -19, 2 -21, 5 -20 C 11 -16, 9 -7, 0 0 Z" />
+          <!-- Rounded petal -->
+          <path id="fall-petal-round" d="M 0 0 C -10 -7, -11 -16, -5 -20 C 0 -21, 0 -21, 5 -20 C 11 -16, 10 -7, 0 0 Z" />
+        </defs>
+      </svg>
     </div>
   </main>
 
@@ -1200,7 +1258,7 @@
     }
 
     // -------------------------------------------------------------
-    // AUTUMN LEAF PETAL ENGINE (Tự rơi nhẹ nhàng 7-8 lá từ vòm cây hoa)
+    // FALLING FLOWERS ENGINE (Tự rơi nhẹ nhàng 7-8 đóa hoa nở rộ từ vòm cây)
     // -------------------------------------------------------------
     let autumnPetalTimer = null;
     let activePetals = 0;
@@ -1213,88 +1271,116 @@
       if (activePetals >= MAX_PETALS_ON_SCREEN && clickX === null) return;
       activePetals++;
 
-      // Màu sắc cánh hoa dịu dàng như ban đầu (Lavender & Soft Pink)
-      const colors = ['#e9d5ff', '#fbcfe8', '#d8b4e2', '#ffffff', '#f5d0fe', '#f472b6'];
-      const petal = document.createElement('div');
-      petal.className = 'petal';
-
       const treeW = tree.clientWidth || 450;
       const treeH = tree.clientHeight || 480;
 
-      let startXPercent, startYPx, petalColor;
+      let startXPercent, startYPx, colType, petalType;
 
       if (clickX !== null && clickY !== null) {
         // Rơi trực tiếp từ điểm chạm trên cành cây
         const rect = tree.getBoundingClientRect();
         startXPercent = Math.max(12, Math.min(88, ((clickX - rect.left) / rect.width) * 100));
         startYPx = Math.max(30, Math.min(treeH * 0.65, clickY - rect.top));
-        petalColor = colors[Math.floor(Math.random() * colors.length)];
+        const colorTypes = ['lavender', 'pink', 'lilac', 'white', 'rose-lavender'];
+        colType = colorTypes[Math.floor(Math.random() * colorTypes.length)];
+        petalType = Math.random() < 0.5 ? 0 : 1;
       } else if (treeFlowersFront && treeFlowersFront.length > 0) {
         // Rơi trực tiếp từ 1 đóa hoa thực tế đang nở rộ trên tán cây
         const f = treeFlowersFront[Math.floor(Math.random() * treeFlowersFront.length)];
         startXPercent = (f.x / CANVAS_WIDTH) * 100;
         startYPx = ((f.y + TREE_OFFSET_Y) / CANVAS_HEIGHT) * treeH;
-
-        const colorMap = {
-          'lavender': '#e9d5ff',
-          'pink': '#fbcfe8',
-          'lilac': '#d8b4e2',
-          'white': '#ffffff',
-          'rose-lavender': '#f5d0fe'
-        };
-        petalColor = colorMap[f.colType] || colors[Math.floor(Math.random() * colors.length)];
+        colType = f.colType;
+        petalType = f.type !== undefined ? f.type : (Math.random() < 0.5 ? 0 : 1);
       } else {
-        // Tự động rơi: xuất phát trực tiếp từ các vòm hoa trên tán cây (X: 18% - 82%, Y: 14% - 46%)
+        // Tự động rơi từ các vòm hoa trên tán cây (X: 18% - 82%, Y: 14% - 46%)
         startXPercent = 18 + Math.random() * 64;
         const startYPercent = 14 + Math.random() * 32;
         startYPx = (startYPercent / 100) * treeH;
-        petalColor = colors[Math.floor(Math.random() * colors.length)];
+        const colorTypes = ['lavender', 'pink', 'lilac', 'white', 'rose-lavender'];
+        colType = colorTypes[Math.floor(Math.random() * colorTypes.length)];
+        petalType = Math.random() < 0.5 ? 0 : 1;
       }
 
-      petal.style.left = `${startXPercent}%`;
-      petal.style.top = `${startYPx}px`;
+      // Bản đồ Gradient & Hình dạng cánh hoa đồng bộ chuẩn xác với hoa trên cây
+      const gradMap = {
+        'lavender': 'fall-grad-lavender',
+        'pink': 'fall-grad-pink',
+        'lilac': 'fall-grad-lilac',
+        'white': 'fall-grad-white',
+        'rose-lavender': 'fall-grad-rose'
+      };
+      const gradId = gradMap[colType] || 'fall-grad-lavender';
+      const petalShapeId = petalType === 0 ? 'fall-petal-notch' : 'fall-petal-round';
 
-      // Kích thước thanh thoát mềm mại (14px - 20px x 18px - 26px)
-      const sizeW = 14 + Math.random() * 6;
-      const sizeH = sizeW * (1.25 + Math.random() * 0.3);
-      petal.style.width = `${sizeW}px`;
-      petal.style.height = `${sizeH}px`;
-      petal.style.borderRadius = Math.random() < 0.5 ? '80% 15% 80% 15%' : '60% 0 60% 50%';
-      petal.style.background = petalColor;
+      const flower = document.createElement('div');
+      flower.className = 'falling-flower';
+      flower.style.left = `${startXPercent}%`;
+      flower.style.top = `${startYPx}px`;
 
-      // Độ đung đưa lắc lư tự nhiên theo gió như lá mùa thu (-35px đến +35px)
+      // Kích thước đóa hoa rơi: 20px - 28px, tỷ lệ 1:1 hoàn mỹ với hoa trên cây
+      const flowerSize = 20 + Math.random() * 8;
+      flower.style.width = `${flowerSize}px`;
+      flower.style.height = `${flowerSize}px`;
+
+      // Cấu trúc trọn vẹn 5 cánh hoa + tâm hoa champagne + 5 nhị hoa mật ong óng ánh
+      flower.innerHTML = `
+        <svg viewBox="-24 -24 48 48" class="flower-svg">
+          <use href="#${petalShapeId}" fill="url(#${gradId})" />
+          <use href="#${petalShapeId}" fill="url(#${gradId})" transform="rotate(72)" />
+          <use href="#${petalShapeId}" fill="url(#${gradId})" transform="rotate(144)" />
+          <use href="#${petalShapeId}" fill="url(#${gradId})" transform="rotate(216)" />
+          <use href="#${petalShapeId}" fill="url(#${gradId})" transform="rotate(288)" />
+          <circle cx="0" cy="0" r="5" fill="#fef9c3" />
+          <circle cx="5.3" cy="1.7" r="1.2" fill="#ca8a04" />
+          <circle cx="1.6" cy="5.3" r="1.2" fill="#ca8a04" />
+          <circle cx="-4.3" cy="3.5" r="1.2" fill="#ca8a04" />
+          <circle cx="-4.3" cy="-3.5" r="1.2" fill="#ca8a04" />
+          <circle cx="1.6" cy="-5.3" r="1.2" fill="#ca8a04" />
+        </svg>
+      `;
+
+      // Độ đung đưa lắc lư tự nhiên theo gió (-35px đến +35px)
       const swayDir = Math.random() < 0.5 ? 1 : -1;
       const swayAmount = (25 + Math.random() * 25) * swayDir;
-      petal.style.setProperty('--sway', `${swayAmount}px`);
+      flower.style.setProperty('--sway', `${swayAmount}px`);
 
       // Khoảng cách rơi từ cành hoa xuống đất (chạm bóng gốc cây)
       const fallDist = (treeH - startYPx) + (15 + Math.random() * 25);
-      petal.style.setProperty('--fall-dist', `${fallDist}px`);
+      flower.style.setProperty('--fall-dist', `${fallDist}px`);
 
       // Tốc độ rơi thong thả, êm ái: từ 6.5s đến 9.0s
       const fallDur = 6.5 + Math.random() * 2.5;
-      petal.style.animationDuration = `${fallDur}s`;
+      flower.style.animationDuration = `${fallDur}s`;
 
-      container.appendChild(petal);
+      // Tự xoay nhẹ nhàng 2D theo chiều kim đồng hồ hoặc ngược lại
+      const startRot = Math.floor(Math.random() * 360);
+      const twirlDir = Math.random() < 0.5 ? 1 : -1;
+      const twirlDur = 4.5 + Math.random() * 3.5;
+      flower.style.setProperty('--start-rot', `${startRot}deg`);
+      flower.style.setProperty('--twirl-dir', twirlDir);
+      flower.style.setProperty('--twirl-dur', `${twirlDur}s`);
+
+      container.appendChild(flower);
 
       setTimeout(() => {
-        petal.remove();
+        flower.remove();
         activePetals = Math.max(0, activePetals - 1);
       }, fallDur * 1000);
     }
 
-    // Tự động rơi liên tục từ tán cây: duy trì nhịp nhàng 7-8 lá rơi cùng lúc
+    // Tự động rơi liên tục từ tán cây: duy trì nhịp nhàng 7-8 đóa hoa rơi cùng lúc
     function startAutumnPetals() {
       if (autumnPetalTimer) return;
 
-      // Thả ngay loạt cánh hoa đầu tiên so le để nhanh chóng đạt 7-8 lá rơi
+      // Thả ngay loạt hoa đầu tiên so le để nhanh chóng đạt 7-8 hoa rơi
       spawnAutumnPetal();
-      setTimeout(() => spawnAutumnPetal(), 300);
-      setTimeout(() => spawnAutumnPetal(), 650);
-      setTimeout(() => spawnAutumnPetal(), 1050);
-      setTimeout(() => spawnAutumnPetal(), 1500);
+      setTimeout(() => spawnAutumnPetal(), 250);
+      setTimeout(() => spawnAutumnPetal(), 550);
+      setTimeout(() => spawnAutumnPetal(), 900);
+      setTimeout(() => spawnAutumnPetal(), 1300);
+      setTimeout(() => spawnAutumnPetal(), 1750);
 
-      // Cứ mỗi 850ms lại có 1 bông mới từ cành hoa tách rơi, duy trì liên tục 7-8 lá rơi đung đưa
+      // Cứ mỗi 850ms lại có 1 bông mới từ cành hoa tách rơi, duy trì liên tục 7-8 đóa hoa rơi đung đưa
       autumnPetalTimer = setInterval(() => {
         if (activePetals < MAX_PETALS_ON_SCREEN) {
           spawnAutumnPetal();
@@ -1497,9 +1583,9 @@
       setTimeout(() => button.click(), 80);
     }
 
-    // Clicking anywhere on the tree triggers gentle falling petals & burst sparkles
+    // Clicking anywhere on the tree triggers gentle falling flower & burst sparkles
     canvas.addEventListener('click', (e) => {
-      spawnAutumnPetal((e.clientX / window.innerWidth) * 100, e.clientY);
+      spawnAutumnPetal(e.clientX, e.clientY);
       burstSparkles(e.clientX, e.clientY, 8);
     });
 

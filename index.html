@@ -1462,6 +1462,10 @@
         height: 10px !important;
       }
 
+      #treeCanvas {
+        filter: saturate(1.35) contrast(1.12) brightness(0.95) !important;
+      }
+
       /* Bức thư nhỏ gọn hơn */
       .letter-player-group {
         width: min(340px, 30vw) !important;
@@ -1846,6 +1850,13 @@
         object-fit: contain !important;
         object-position: bottom center !important;
         display: block !important;
+        /* Tông màu hoa anh đào đậm đà, sắc nét và tươi tắn hơn trên màn hình mobile */
+        filter: saturate(1.35) contrast(1.12) brightness(0.95) !important;
+      }
+
+      .tree-ground-landscape,
+      .tree-ground-foreground {
+        filter: saturate(1.25) contrast(1.08) !important;
       }
 
       .tree:not(.blooming) {
@@ -2432,7 +2443,8 @@
     </div>
     <div class="toast-title" id="toastTitle">Gợi ý nhỏ dành cho Nanh ✨</div>
     <div class="toast-text">
-      Nanh nên để giao diện thiết bị ở <span>chế độ sáng</span> thì website sẽ hiển thị đẹp và lung linh nhất nhé! 🌸
+      Nanh nên để giao diện thiết bị ở <span>chế độ sáng</span> hoặc xem ở laptop sẽ hiển thị đẹp và lung linh nhất nhé!
+      🌸
     </div>
     <button class="toast-confirm-btn" id="toastConfirmBtn">Đã hiểu ✨</button>
   </aside>

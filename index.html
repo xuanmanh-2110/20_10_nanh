@@ -3805,6 +3805,7 @@
             if (playerDiscCover) playerDiscCover.src = track.cover;
             if (playerTrackBadge) playerTrackBadge.textContent = `Bài ${currentTrackIndex + 1} / ${PLAYLIST.length}`;
             if (lyricsCardBadge) lyricsCardBadge.textContent = `LỜI BÀI HÁT · ${track.title.toUpperCase()}`;
+      updateMediaSession(track);
 
             currentLyricIndex = 0;
             renderDesktopLyrics();
@@ -3859,58 +3860,104 @@
     }
 
     // =========================================================
-    // XỬ LÝ BACKGROUND & RỜI KHỎI TRÌNH DUYỆT (STRICT PAUSE RULES)
-    // - Chuyển sang app khác -> PAUSE nhạc
-    // - Rời khỏi Safari / đổi tab -> PAUSE nhạc
-    // - Khóa màn hình -> PAUSE nhạc
-    // - Khi quay lại -> KHÔNG tự động play, giữ PAUSED, hiển thị nút Play
+    // XỬ LÝ KHI CHUYỂN TAB TRÌNH DUYỆT & QUAY LẠI TRANG WEB
+    // - Khi chuyển sang tab khác: NHẠC VẪN TIẾP TỤC CHẠY BÌNH THƯỜNG
+    // - Khi quay lại tab: Đồng bộ ngay lập tức tiến trình & lời bài hát theo thời gian thực
     // =========================================================
-    function handleBackgroundPause() {
-      if (bgMusic && !bgMusic.paused) {
-        pauseMusic();
-      } else {
-        saveAudioState();
-        stopAudioSync();
+    function updateMediaSession(track) {
+      if ('mediaSession' in navigator && track) {
+        try {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.title,
+            artist: track.artist || "Aziz Hedra",
+            album: "20/10 Dành tặng Ngọc Anh 🌸",
+            artwork: [
+              { src: track.cover, sizes: '512x512', type: 'image/png' }
+            ]
+          });
+          navigator.mediaSession.setActionHandler('play', () => playMusic());
+          navigator.mediaSession.setActionHandler('pause', () => pauseMusic());
+          navigator.mediaSession.setActionHandler('previoustrack', () => switchTrack(currentTrackIndex - 1, true));
+          navigator.mediaSession.setActionHandler('nexttrack', () => switchTrack(currentTrackIndex + 1, true));
+        } catch (e) { }
       }
     }
 
-    function handleForegroundReturn() {
-      // Tuyệt đối KHÔNG tự động play!
-      // Giữ nguyên trạng thái PAUSED, cập nhật chính xác UI theo bgMusic.currentTime
-      if (bgMusic && !bgMusic.paused) {
+    // Phân biệt nền tảng Mobile / Tablet vs Desktop
+    function isMobilePlatform() {
+      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+             (navigator.maxTouchPoints > 1 && window.innerWidth <= 1024) ||
+             (window.innerWidth <= 768);
+    }
+
+    // =========================================================
+    // QUY TẮC PHÁT NHẠC KHI RỜI / CHUYỂN TAB:
+    // - TRÊN DESKTOP: Chuyển sang tab khác NHẠC VẪN TIẾP TỤC CHẠY bình thường
+    // - TRÊN MOBILE: Chuyển tab, thoát Safari, hoặc khóa màn hình -> TẮT/NGỪNG NHẠC NGAY
+    // - KHI QUAY LẠI TRÊN MOBILE: Giữ trạng thái PAUSED, người dùng tự bấm Play để tiếp tục
+    // =========================================================
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (isMobilePlatform()) {
+          // Trên mobile: Chuyển tab, thoát Safari, đổi app hoặc tắt màn hình -> DỪNG NHẠC
+          if (bgMusic && !bgMusic.paused) {
+            pauseMusic();
+          }
+        } else {
+          // Trên desktop: Chuyển tab khác -> NHẠC VẪN CHẠY TIẾP TỤC
+          if (audioSyncRaf) {
+            cancelAnimationFrame(audioSyncRaf);
+            audioSyncRaf = null;
+          }
+        }
+        saveAudioState();
+      } else {
+        // Khi quay lại tab (cả mobile và desktop)
+        updateAudioProgress();
+        updateLyrics();
+        if (bgMusic && !bgMusic.paused) {
+          // Nhạc đang chạy (desktop): đồng bộ giao diện và tiếp tục loop
+          if (musicPlayerCard) {
+            musicPlayerCard.classList.remove('hidden');
+            musicPlayerCard.classList.add('playing');
+          }
+          startAudioSync();
+        } else {
+          // Nhạc đang dừng (mobile hoặc desktop đã pause): giữ nguyên nút Play, không tự động phát
+          if (musicPlayerCard) {
+            musicPlayerCard.classList.remove('playing');
+          }
+        }
+      }
+    });
+
+    // Khi đóng trang, chuyển trang hoặc Safari bị đẩy xuống nền:
+    window.addEventListener('pagehide', () => {
+      if (isMobilePlatform() && bgMusic && !bgMusic.paused) {
         pauseMusic();
       }
-      stopAudioSync();
+      saveAudioState();
+    });
+
+    window.addEventListener('pageshow', () => {
       updateAudioProgress();
       updateLyrics();
-      if (musicPlayerCard) {
-        musicPlayerCard.classList.remove('playing');
-      }
-    }
-
-    // 1. visibilitychange: Chuyển tab, đổi app, khóa màn hình
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') {
-        handleBackgroundPause();
-      } else if (document.visibilityState === 'visible') {
-        handleForegroundReturn();
-      }
-    });
-
-    // 2. pagehide: Khi chuyển trang, đóng tab, đưa Safari xuống nền
-    window.addEventListener('pagehide', () => {
-      handleBackgroundPause();
-    });
-
-    // 3. pageshow: Khi người dùng quay lại Safari (kể cả khôi phục từ bfcache)
-    window.addEventListener('pageshow', () => {
-      handleForegroundReturn();
-    });
-
-    // 4. blur: Khi mất focus hoàn toàn khỏi cửa sổ Safari
-    window.addEventListener('blur', () => {
-      if (document.visibilityState === 'hidden') {
-        handleBackgroundPause();
+      if (isMobilePlatform()) {
+        // Trên mobile khi quay lại Safari: tuyệt đối không tự phát nhạc
+        if (bgMusic && !bgMusic.paused) {
+          pauseMusic();
+        }
+        if (musicPlayerCard) {
+          musicPlayerCard.classList.remove('playing');
+        }
+      } else {
+        if (bgMusic && !bgMusic.paused) {
+          if (musicPlayerCard) {
+            musicPlayerCard.classList.remove('hidden');
+            musicPlayerCard.classList.add('playing');
+          }
+          startAudioSync();
+        }
       }
     });
 
@@ -3965,6 +4012,7 @@
       if (playerDiscCover) playerDiscCover.src = track.cover;
       if (playerTrackBadge) playerTrackBadge.textContent = `Bài ${currentTrackIndex + 1} / ${PLAYLIST.length}`;
       if (lyricsCardBadge) lyricsCardBadge.textContent = `LỜI BÀI HÁT · ${track.title.toUpperCase()}`;
+      updateMediaSession(track);
 
       hasStartedAudioOnce = autoPlay || wasPlaying;
 

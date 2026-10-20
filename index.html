@@ -2248,42 +2248,62 @@
     }
 
     /* =========================================================
-       LỜI NHẮC NHỞ CHẾ ĐỘ SÁNG (LIGHT MODE TOAST NOTIFICATION)
+       LỜI NHẮC NHỞ CHẾ ĐỘ SÁNG (HIỂN THỊ CHÍNH GIỮA MÀN HÌNH)
        ========================================================= */
+    .toast-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(48, 16, 32, 0.28);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .toast-backdrop.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
     .light-mode-toast {
       position: fixed;
-      bottom: 24px;
-      top: auto;
+      top: 50%;
       left: 50%;
-      transform: translate3d(-50%, 24px, 0);
-      z-index: 1000;
-      display: inline-flex;
+      transform: translate3d(-50%, -50%, 0) scale(0.92);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
       gap: 10px;
-      padding: 8px 14px 8px 12px;
-      background: rgba(255, 252, 254, 0.96);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(244, 114, 182, 0.45);
-      border-radius: 999px;
-      box-shadow: 0 10px 28px rgba(190, 24, 93, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 22px 24px 18px;
+      background: rgba(255, 252, 254, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(244, 114, 182, 0.50);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(190, 24, 93, 0.22), 0 4px 16px rgba(0, 0, 0, 0.08);
       color: #881337;
-      font-size: 0.82rem;
-      max-width: min(520px, 92vw);
+      font-size: 0.86rem;
+      width: min(380px, 88vw);
       box-sizing: border-box;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-                  visibility 0.45s;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.35s;
     }
 
     .light-mode-toast.visible {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transform: translate3d(-50%, 0, 0);
+      transform: translate3d(-50%, -50%, 0) scale(1);
     }
 
     .light-mode-toast .toast-icon {
@@ -2291,23 +2311,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 26px;
-      height: 26px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: linear-gradient(135deg, #fef08a 0%, #f472b6 100%);
       color: #881337;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.30);
+      margin-bottom: 2px;
+    }
+
+    .light-mode-toast .toast-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #be123c;
+      letter-spacing: 0.02em;
     }
 
     .light-mode-toast .toast-text {
-      flex: 1;
-      line-height: 1.35;
+      line-height: 1.42;
       font-family: 'Quicksand', sans-serif;
-    }
-
-    .light-mode-toast .toast-text strong {
-      color: #be123c;
-      font-weight: 700;
+      color: #701a35;
+      font-size: 0.85rem;
+      margin: 0;
     }
 
     .light-mode-toast .toast-text span {
@@ -2318,12 +2344,35 @@
       text-underline-offset: 2px;
     }
 
-    .light-mode-toast .toast-close-btn {
-      flex-shrink: 0;
-      background: rgba(244, 114, 182, 0.18);
+    .light-mode-toast .toast-confirm-btn {
+      margin-top: 6px;
+      background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+      color: #ffffff;
       border: none;
-      width: 22px;
-      height: 22px;
+      border-radius: 999px;
+      padding: 8px 26px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      font-family: 'Quicksand', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(190, 24, 93, 0.28);
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .light-mode-toast .toast-confirm-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 18px rgba(190, 24, 93, 0.38);
+    }
+
+    .light-mode-toast .toast-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(244, 114, 182, 0.16);
+      border: none;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -2343,63 +2392,43 @@
 
     @media (prefers-color-scheme: dark) {
       .light-mode-toast {
-        background: rgba(255, 240, 246, 0.98) !important;
+        background: rgba(255, 245, 248, 0.99) !important;
         border-color: rgba(244, 114, 182, 0.6) !important;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(244, 114, 182, 0.25) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 20px rgba(244, 114, 182, 0.3) !important;
         color: #881337 !important;
       }
     }
 
     body.dark-mode .light-mode-toast {
-      background: rgba(255, 240, 246, 0.98) !important;
+      background: rgba(255, 245, 248, 0.99) !important;
       border-color: rgba(244, 114, 182, 0.6) !important;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(244, 114, 182, 0.25) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 20px rgba(244, 114, 182, 0.3) !important;
       color: #881337 !important;
-    }
-
-    @media (max-width: 600px) {
-      .light-mode-toast {
-        bottom: 16px;
-        top: auto;
-        padding: 7px 11px 7px 9px;
-        font-size: 0.76rem;
-        gap: 7px;
-        width: min(360px, 94vw);
-      }
-      .light-mode-toast .toast-icon {
-        width: 22px;
-        height: 22px;
-      }
-      .light-mode-toast .toast-icon svg {
-        width: 13px;
-        height: 13px;
-      }
-      .light-mode-toast .toast-close-btn {
-        width: 20px;
-        height: 20px;
-      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Lời nhắc nhở chế độ sáng (Light Mode Tip) -->
-  <aside class="light-mode-toast" id="lightModeToast" role="status" aria-live="polite">
-    <div class="toast-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-      </svg>
-    </div>
-    <div class="toast-text">
-      <strong>Gợi ý:</strong> Bạn nên để giao diện ở <span>chế độ sáng</span> thì website sẽ hiển thị đẹp và lung linh nhất nhé! ✨
-    </div>
+  <!-- Lời nhắc nhở chế độ sáng (Light Mode Tip) hiển thị ở giữa màn hình -->
+  <div class="toast-backdrop" id="toastBackdrop" aria-hidden="true"></div>
+  <aside class="light-mode-toast" id="lightModeToast" role="dialog" aria-modal="true" aria-labelledby="toastTitle">
     <button class="toast-close-btn" id="toastCloseBtn" aria-label="Đóng thông báo" title="Đóng">
-      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
+    <div class="toast-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+      </svg>
+    </div>
+    <div class="toast-title" id="toastTitle">Gợi ý nhỏ dành cho bạn ✨</div>
+    <div class="toast-text">
+      Bạn nên để giao diện thiết bị ở <span>chế độ sáng</span> thì website sẽ hiển thị đẹp và lung linh nhất nhé! 🌸
+    </div>
+    <button class="toast-confirm-btn" id="toastConfirmBtn">Đã hiểu ✨</button>
   </aside>
 
 
@@ -4611,40 +4640,48 @@
 
 
     // =========================================================
-    // LỜI NHẮC NHỞ CHẾ ĐỘ SÁNG (LIGHT MODE TOAST)
+    // LỜI NHẮC NHỞ CHẾ ĐỘ SÁNG (HIỂN THỊ CHÍNH GIỮA MÀN HÌNH)
     // =========================================================
     let toastDismissTimer = null;
     function hideLightModeToast() {
       const toast = document.getElementById('lightModeToast');
-      if (!toast) return;
+      const backdrop = document.getElementById('toastBackdrop');
       if (toastDismissTimer) clearTimeout(toastDismissTimer);
-      toast.classList.remove('visible');
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 500);
+      if (toast) {
+        toast.classList.remove('visible');
+        setTimeout(() => { toast.style.display = 'none'; }, 400);
+      }
+      if (backdrop) {
+        backdrop.classList.remove('visible');
+        setTimeout(() => { backdrop.style.display = 'none'; }, 400);
+      }
     }
 
     function initLightModeToast() {
       const toast = document.getElementById('lightModeToast');
+      const backdrop = document.getElementById('toastBackdrop');
       const closeBtn = document.getElementById('toastCloseBtn');
+      const confirmBtn = document.getElementById('toastConfirmBtn');
       if (!toast) return;
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          hideLightModeToast();
-        });
-      }
+      if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); hideLightModeToast(); });
+      if (confirmBtn) confirmBtn.addEventListener('click', (e) => { e.stopPropagation(); hideLightModeToast(); });
+      if (backdrop) backdrop.addEventListener('click', () => { hideLightModeToast(); });
 
-      // Hiện lời nhắc nhở nhẹ nhàng sau 500ms khi vào trang
+      // Hiện lời nhắc nhở nhẹ nhàng sau 400ms khi vào trang
       setTimeout(() => {
-        toast.classList.add('visible');
+        if (backdrop) {
+          backdrop.style.display = 'block';
+          requestAnimationFrame(() => backdrop.classList.add('visible'));
+        }
+        toast.style.display = 'flex';
+        requestAnimationFrame(() => toast.classList.add('visible'));
 
-        // Tự động ẩn êm dịu sau 8 giây nếu chưa đóng
+        // Tự động ẩn êm dịu sau 10 giây nếu chưa đóng
         toastDismissTimer = setTimeout(() => {
           hideLightModeToast();
-        }, 8000);
-      }, 500);
+        }, 10000);
+      }, 400);
     }
 
     initLightModeToast();

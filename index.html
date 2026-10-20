@@ -681,12 +681,11 @@
     .mobile-lyrics-content {
       position: relative;
       flex: 1;
-      height: 48px;
-      overflow: hidden;
+      min-height: 28px;
+      height: auto;
+      overflow: visible;
       font-family: 'Dancing Script', cursive;
       color: #881337;
-      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
     }
 
     .mobile-lyrics-track {
@@ -694,62 +693,43 @@
       display: flex;
       flex-direction: column;
       width: 100%;
-      padding: 10px 0;
+      padding: 0;
       box-sizing: border-box;
-      transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: transform;
+      transform: none !important;
     }
 
     .mobile-lyric-item {
-      position: relative;
+      display: none;
       width: 100%;
       min-height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       text-align: center;
-      padding: 2px 4px;
+      padding: 2px 6px;
       box-sizing: border-box;
-      font-size: 0.88rem;
-      line-height: 1.35;
-      color: #9d4c68;
-      opacity: 0.20;
-      transform: translateY(4px) scale(0.96);
-      transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 800ms cubic-bezier(0.22, 1, 0.36, 1),
-        color 800ms cubic-bezier(0.22, 1, 0.36, 1);
+      font-size: 0.95rem;
+      line-height: 1.42;
+      color: #be123c;
+      font-weight: 700;
       word-break: break-word;
       overflow-wrap: break-word;
+      text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.9),
+        0 0 20px rgba(255, 255, 255, 0.85);
     }
 
     .mobile-lyric-item.active {
-      opacity: 1 !important;
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: #be123c !important;
-      transform: translateY(0) scale(1.02) !important;
-      text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.9),
-        0 0 20px rgba(255, 255, 255, 0.85),
-        0 0 40px rgba(255, 255, 255, 0.65),
-        0 0 70px rgba(255, 220, 235, 0.50),
-        0 0 100px rgba(244, 114, 182, 0.30);
+      display: block !important;
+      animation: mobileLyricFadeIn 0.35s ease-out;
     }
 
-
-    .mobile-lyric-item.lyric-prev {
-      opacity: 0.40 !important;
-      transform: translateY(-2px) scale(0.97) !important;
-    }
-
-    .mobile-lyric-item.lyric-next {
-      opacity: 0.40 !important;
-      transform: translateY(2px) scale(0.97) !important;
-    }
-
-    .mobile-lyric-item.lyric-distant {
-      opacity: 0.25 !important;
-      transform: translateY(0) scale(0.95) !important;
+    @keyframes mobileLyricFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .mobile-lyrics-heart {
@@ -1812,26 +1792,31 @@
       }
 
       .mobile-lyrics-content {
-        height: 28px !important;
-        overflow: hidden !important;
-        mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%) !important;
-        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%) !important;
+        height: auto !important;
+        min-height: 28px !important;
+        max-height: none !important;
+        overflow: visible !important;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
       }
 
       .mobile-lyrics-track {
         padding: 0 !important;
+        transform: none !important;
       }
 
       .mobile-lyric-item {
-        font-size: 0.82rem !important;
-        min-height: 28px !important;
-        line-height: 28px !important;
-        padding: 0 4px !important;
+        font-size: clamp(0.86rem, 3.8vw, 0.96rem) !important;
+        min-height: 24px !important;
+        line-height: 1.4 !important;
+        padding: 2px 6px !important;
+        white-space: normal !important;
+        text-overflow: unset !important;
+        overflow: visible !important;
       }
 
       .mobile-lyric-item.active {
-        font-size: 0.88rem !important;
-        line-height: 28px !important;
+        display: block !important;
       }
 
       .desktop-lyrics-col {
@@ -5608,56 +5593,75 @@
         duration: 212,
         firstPlayTime: 0.0,
         lyrics: [
-          { time: 0.0, en: "(Giai điệu mở đầu...)" },
-          { time: 15.02, en: "Ta đều mang trong mình những điều thầm kín để gió thổi bùng lên" },
-          { time: 19.8, en: "Chúng ta nhảy say sưa với nhau ở trên tầng thượng của nhà em" },
-          { time: 24.3, en: "Dang hai tay nhắm mắt như thể muốn ôm vì sao cùng màn đêm" },
-          { time: 28.7, en: "Và khi em ngân đôi câu ca anh đã vô thức hát cùng em" },
-          { time: 33.2, en: "Ta trở thành những đứa trẻ lạc ở trong thành phố đầy ánh đèn" },
-          { time: 37.8, en: "Anh muốn biết em vui hay buồn khi đèn đã tắt sau cánh rèm" },
-          { time: 42.5, en: "Em từng nói nỗi đau của anh thì cũng một phần là của em" },
-          { time: 46.9, en: "Và chỉ em mới có thể làm cho anh phải khóc vào nửa đêm" },
-          { time: 51.5, en: "Em khiến anh phải khó chịu khi ở cạnh, nhưng đến khi xa nhau thì trong đầu anh lại nhớ" },
-          { time: 56.4, en: "Em kể anh về những điều làm em buồn dù đã qua nhưng em quên để cảm xúc ở lại đó" },
-          { time: 61.1, en: "Em nói em không còn tin vào tình yêu và tình yêu không hợp với nơi em sẽ phải đặt chân" },
-          { time: 65.8, en: "Em giấu đi giọt nước mắt bằng cách mưa khi rơi xuống em hoà vào với giọt mưa đó thật nhanh" },
-          { time: 71.0, en: "Vậy thì em có yêu anh không?" },
-          { time: 74.2, en: "Vì chúng ta đã cùng nhảy và mặc kệ trời đổ mưa" },
-          { time: 78.5, en: "Vào cái hôm ở trên tầng thượng" },
-          { time: 81.3, en: "Rồi em về chẳng kịp tắm mà đã ngủ thật say sưa" },
-          { time: 85.5, en: "Ta đã cười thật là vô lo" },
-          { time: 88.0, en: "Từ đó em cười khi trời mưa to" },
-          { time: 90.5, en: "Từ đó em thích chụp những bức hình" },
-          { time: 92.8, en: "Lưu lại những ngày em chẳng âu lo" },
-          { time: 95.0, en: "Vậy thì em có yêu anh không?" },
-          { time: 98.0, en: "Bởi vì em là người khiến anh cảm thấy mình đặc biệt" },
-          { time: 102.5, en: "Giữa cả một biển người mênh mông" },
-          { time: 105.0, en: "Anh đã luôn nghĩ mình là người thừa trong mọi bữa tiệc" },
-          { time: 109.2, en: "Anh đã luôn nghĩ mình vô hình" },
-          { time: 112.0, en: "Và những điều đó không dành cho mình" },
-          { time: 115.0, en: "Nhưng rồi anh thấy em lệ hoen mi" },
-          { time: 117.5, en: "Em nói nếu yêu thì để em đi" },
-          { time: 121.0, en: "Mưa trong anh sẽ rơi, cuốn đi đoạn tình yêu chưa nở thế thôi" },
-          { time: 126.5, en: "Giá như cảm xúc ban đầu anh đừng chôn giấu" },
-          { time: 131.0, en: "Thì đã chẳng quay lưng lên chuyến tàu trong vai một người xấu" },
-          { time: 135.5, en: "Và luôn thầm mong em yêu êm ấm" },
-          { time: 140.0, en: "Và đừng như anh vỏ lon ngổn ngang trên bậc thềm" },
-          { time: 144.5, en: "Anh không bao giờ muốn một ngày phải say goodbye" },
-          { time: 148.5, en: "Chỉ là chẳng để điều ấy có thể diễn ra, anh đã sai anh phải đi" },
-          { time: 153.0, en: "Và em chọn để tâm sự của riêng mình được giấu kín" },
-          { time: 157.5, en: "Ngày hôm đó khi em đi trong mắt bờ đê màu tím" },
-          { time: 162.0, en: "Vậy thì cứ replay bài này nếu em thức sẽ thấy hay" },
-          { time: 166.5, en: "Em thấy ước mơ của mình từ ô cửa sổ máy bay" },
-          { time: 171.0, en: "Và anh biết em vẫn luôn theo dõi anh mỗi ngày" },
-          { time: 175.5, en: "Để cho anh có cảm giác là em luôn ở đây" },
-          { time: 180.0, en: "Ta đều có những suy nghĩ kiểu 24/7" },
-          { time: 184.0, en: "Hy vọng nhau không có những cơn bão lòng bủa vây" },
-          { time: 188.5, en: "Vậy thì em có yêu anh không?" },
-          { time: 192.0, en: "Đó luôn là một câu hỏi khiến cho anh phải thắc mắc" },
-          { time: 196.5, en: "Nhưng nó không còn quan trọng nếu gương mặt em không cười mà lại có giọt nước mắt" },
-          { time: 201.5, en: "Đâu cần gần để mình hiểu nhau, ta đều đã có muôn vàn kiểu đau" },
-          { time: 206.0, en: "Nên em lựa chọn bình thản để sau, anh thấy dễ hiểu mà, chẳng sao đâu..." },
-          { time: 209.0, en: "Chúc Ngọc Anh 20/10 luôn rạng ngời và hạnh phúc ✨" }
+          { time: 0.0, en: "🎵 ~ Anh Muốn Nhìn Thấy Em - The Wind, Dangrangto ~ 🎵" },
+          { time: 15.56, en: "Ta đều mang trong mình những điều thầm kín để gió thổi bùng lên" },
+          { time: 17.64, en: "Chúng ta nhảy say sưa với nhau ở trên tầng thượng của nhà em" },
+          { time: 19.7, en: "Dang hai tay nhắm mắt như thể muốn ôm vì sao cùng màn đêm" },
+          { time: 21.68, en: "Và khi em ngân đôi câu ca anh đã vô thức hát cùng em" },
+          { time: 23.7, en: "Ta trở thành những đứa trẻ lạc ở trong thành phố đầy ánh đèn" },
+          { time: 25.66, en: "Anh muốn biết em vui hay buồn khi đèn đã tắt sau cánh rèm" },
+          { time: 27.84, en: "Em từng nói nỗi đau của anh thì cũng một phần là của em" },
+          { time: 29.8, en: "Và chỉ em mới có thể làm cho anh phải đến vào nửa đêm" },
+          { time: 31.64, en: "Em khiến anh phải khó chịu khi ở cạnh" },
+          { time: 33.14, en: "Nhưng đến khi ta xa nhau thì trong đầu anh lại nhớ" },
+          { time: 35.22, en: "Em kể anh về những điều làm em buồn" },
+          { time: 37.12, en: "Dù đã qua nhưng em quên để cảm xúc ở lại đó" },
+          { time: 39.12, en: "Em nói em không còn tin vào tình yêu" },
+          { time: 41.08, en: "Vì tình yêu không hợp với nơi em sẽ phải đặt chân" },
+          { time: 43.1, en: "Em giấu đi giọt nước mắt bằng cách mưa" },
+          { time: 45.14, en: "Khi rơi xuống em hoà vào với giọt mưa đó thật nhanh" },
+          { time: 47.82, en: "Vậy thì em có yêu anh không?" },
+          { time: 49.76, en: "Vì chúng ta đã cùng nhảy và mặc kệ trời đổ mưa" },
+          { time: 51.78, en: "Vào cái hôm ở trên tầng thượng" },
+          { time: 53.84, en: "Rồi em về chẳng kịp tắm mà đã ngủ thật say sưa" },
+          { time: 55.64, en: "Ta đã cười thật là vô lo" },
+          { time: 57.38, en: "Từ đó em cười khi trời mưa to" },
+          { time: 59.34, en: "Từ đó em thích chụp những bức hình" },
+          { time: 61.46, en: "Lưu lại những ngày em chẳng âu lo" },
+          { time: 63.62, en: "Vậy thì em có yêu anh không?" },
+          { time: 65.82, en: "Bởi vì em là người khiến anh cảm thấy mình đặc biệt" },
+          { time: 67.76, en: "Giữa cả một biển người mênh mông" },
+          { time: 69.76, en: "Anh đã luôn nghĩ mình là người thừa trong mọi bữa tiệc" },
+          { time: 71.8, en: "Anh đã luôn nghĩ mình vô hình" },
+          { time: 73.36, en: "Và những điều đó không dành cho mình" },
+          { time: 75.42, en: "Nhưng rồi anh thấy em lệ hoen mi" },
+          { time: 77.38, en: "Em nói nếu yêu thì để em đi" },
+          { time: 81.56, en: "Và anh đi nhưng con tim mình thì kẹt lại..." },
+          { time: 89.44, en: "Và anh đi nhưng con tim mình thì kẹt lại..." },
+          { time: 95.42, en: "Mưa trong anh sẽ rơi" },
+          { time: 98.8, en: "Cuốn đi đoạn tình yêu chỉ đến thế thôi" },
+          { time: 103.06, en: "Giá như cảm xúc ban đầu anh đừng chôn giấu" },
+          { time: 106.72, en: "Thì đã chẳng quay lưng lên chuyến tàu trong vai một người xấu" },
+          { time: 111.52, en: "Vì luôn thầm mong em yêu ấm êm" },
+          { time: 114.76, en: "Và đừng như anh vỏ lon ngổn ngang trên bậc thềm" },
+          { time: 118.58, en: "Anh không bao giờ muốn một ngày phải say goodbye" },
+          { time: 123.54, en: "Chỉ là chẳng để điều ấy cứ thế diễn ra, anh đã sai anh phải đi" },
+          { time: 127.66, en: "Và em chọn để tâm sự của riêng mình được giấu kín" },
+          { time: 129.86, en: "Ngày hôm đó khi em đi trong một bộ đồ màu tím" },
+          { time: 131.7, en: "Vậy thì cứ replay bài này nếu em thực sự thấy hay" },
+          { time: 134.68, en: "Em thấy ước mơ của mình từ ô cửa sổ máy bay" },
+          { time: 136.02, en: "Và anh biết em vẫn luôn theo dõi anh mỗi ngày" },
+          { time: 137.92, en: "Để cho anh có cảm giác là em luôn ở đây" },
+          { time: 139.76, en: "Ta đều có những suy nghĩ kiểu 24 trên 7" },
+          { time: 141.82, en: "Hy vọng nhau không có những cơn bão lòng bủa vây" },
+          { time: 143.76, en: "Vậy thì em có yêu anh không?" },
+          { time: 145.42, en: "Đó luôn là một câu hỏi khiến cho anh phải thắc mắc" },
+          { time: 147.6, en: "Nhưng nó không còn quan trọng" },
+          { time: 149.64, en: "Nếu gương mặt em không cười mà lại có giọt nước mắt" },
+          { time: 151.64, en: "Đâu cần gần để mình hiểu nhau" },
+          { time: 153.04, en: "Ta đều đã có muôn vàn kiểu đau" },
+          { time: 155.3, en: "Nên em lựa chọn bình thản để sau" },
+          { time: 157.36, en: "Anh thấy dễ hiểu mà, chẳng sao đâu" },
+          { time: 159.86, en: "Mưa trong anh sẽ rơi" },
+          { time: 162.84, en: "Cuốn đi đoạn tình yêu chỉ đến thế thôi" },
+          { time: 166.8, en: "Giá như cảm xúc ban đầu anh đừng chôn giấu" },
+          { time: 170.76, en: "Thì đã chẳng quay lưng lên chuyến tàu trong vai một người xấu" },
+          { time: 175.08, en: "Vì luôn thầm mong em yêu ấm êm" },
+          { time: 178.84, en: "Và đừng như anh vỏ lon ngổn ngang trên bậc thềm" },
+          { time: 182.22, en: "Anh không bao giờ muốn một ngày phải say goodbye" },
+          { time: 187.28, en: "Chỉ là chẳng để điều ấy cứ thế diễn ra, anh đã sai anh phải đi" },
+          { time: 196.0, en: "(Giai điệu kết thúc...)" },
+          { time: 208.0, en: "Chúc Ngọc Anh 20/10 luôn rạng ngời và hạnh phúc ✨" }
         ]
       },
       {
@@ -5744,43 +5748,64 @@
         artist: "Low G, Thắng",
         src: "assets/audio/music40.webm",
         cover: "assets/covers/cover40.png",
-        duration: 138,
+        duration: 174,
         firstPlayTime: 0.0,
         lyrics: [
-          { time: 0.0, en: "(Giai điệu mở đầu...)" },
-          { time: 0.48, en: "Mà sao lúc vui em bao giờ cũng đang bận" },
-          { time: 3.68, en: "Lúc bên anh bao giờ cũng đang giận" },
-          { time: 6.68, en: "Nói chung anh chỉ là thuốc an thần" },
-          { time: 9.4, en: "Dùng mỗi lần trong người có điều phân vân" },
-          { time: 13.0, en: "Em chỉ gọi anh mỗi khi có chuyện buồn" },
-          { time: 16.0, en: "Muốn được nghe giọng anh cho em bớt nghĩ" },
-          { time: 19.5, en: "Chứ lúc vui em đi cùng người khác" },
-          { time: 22.5, en: "Anh chỉ là bạn tâm giao tri kỷ" },
-          { time: 25.8, en: "Và em luôn nói anh là người đặc biệt" },
-          { time: 29.0, en: "Em chưa từng gặp ai giống như anh" },
-          { time: 32.5, en: "Em cảm thấy an toàn khi ở cạnh anh" },
-          { time: 35.8, en: "Nhưng em chưa muốn yêu ai đâu anh" },
-          { time: 39.0, en: "Được rồi, anh hiểu mà" },
-          { time: 42.0, en: "Anh chỉ là nơi em tìm về khi em mệt" },
-          { time: 45.5, en: "Là liều thuốc an thần cho tâm hồn em dịu lại" },
-          { time: 49.0, en: "Sau những ngày dài em mệt mỏi bên ngoài" },
-          { time: 53.0, en: "Mà sao lúc vui em bao giờ cũng đang bận" },
-          { time: 56.5, en: "Lúc bên anh bao giờ cũng đang giận" },
-          { time: 59.8, en: "Nói chung anh chỉ là thuốc an thần" },
-          { time: 63.0, en: "Dùng mỗi lần trong người có điều phân vân" },
-          { time: 66.5, en: "Em muốn một người lắng nghe em khóc" },
-          { time: 70.0, en: "Muốn một người kiên nhẫn vỗ về em" },
-          { time: 73.5, en: "Nhưng khi bình minh lên em lau nước mắt" },
-          { time: 77.0, en: "Thì người em nhớ tới lại chẳng phải anh" },
-          { time: 80.5, en: "Và anh vẫn ở đây, mỗi khi em cần" },
-          { time: 84.0, en: "Làm viên thuốc nhỏ xoa dịu vết thương sâu" },
-          { time: 88.0, en: "Dù biết ngày mai em lại đi mất" },
-          { time: 92.0, en: "Anh vẫn mỉm cười chúc em bình yên" },
-          { time: 96.0, en: "Nói chung anh chỉ là thuốc an thần..." },
-          { time: 102.0, en: "Thuốc an thần..." },
-          { time: 115.0, en: "Mỗi khi trong lòng em có điều phân vân..." },
-          { time: 125.0, en: "(Giai điệu guitar kết thúc...)" },
-          { time: 135.0, en: "Chúc Ngọc Anh 20/10 luôn rạng ngời và hạnh phúc ✨" }
+          { time: 0.0, en: "🎵 ~ An Thần - Low G, Thắng ~ 🎵" },
+          { time: 0.58, en: "Tại sao lúc vui em bao giờ cũng đang bận?" },
+          { time: 3.99, en: "Lúc bên anh bao giờ cũng đang giận?" },
+          { time: 6.51, en: "Nói chung anh chỉ là thuốc an thần" },
+          { time: 9.44, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 12.3, en: "Nói em không nên dùng quá hai lần" },
+          { time: 14.98, en: "Nói em chỉ nên dùng lúc em cần" },
+          { time: 17.96, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 20.77, en: "Với em anh chỉ là, thằng bạn thân" },
+          { time: 24.48, en: "Thuốc tây cùng lá cây" },
+          { time: 26.53, en: "Nó chỉ làm em quá cao để xuống đây" },
+          { time: 29.41, en: "Anh chỉ mơ những đắm say, đắm say" },
+          { time: 32.33, en: "Em còn không muốn nắm tay, nắm tay" },
+          { time: 34.91, en: "Nói anh nghe chuyện đắng cay, đắng cay" },
+          { time: 37.63, en: "Mỗi khi theo người ta đi đó đây cùng gió mây" },
+          { time: 40.23, en: "Em tìm anh chỉ khi nó uống say rồi quá tay" },
+          { time: 43.14, en: "Cơn giận nguôi rồi mai em sẽ bay, em sẽ bay" },
+          { time: 45.84, en: "Tại sao lúc vui em bao giờ cũng đang bận?" },
+          { time: 48.92, en: "Lúc bên anh bao giờ cũng đang giận?" },
+          { time: 51.86, en: "Nói chung anh chỉ là thuốc an thần" },
+          { time: 54.58, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 57.46, en: "Nói em không nên dùng quá hai lần" },
+          { time: 60.39, en: "Nói em chỉ nên dùng lúc em cần" },
+          { time: 62.97, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 65.85, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 68.79, en: "Với em anh chỉ là..." },
+          { time: 70.34, en: "Đi tìm anh khi hơi toàn men" },
+          { time: 71.92, en: "Em lại đi kể về nó với anh ở trên con Audi đen" },
+          { time: 74.83, en: "Hôm trước anh mang cây thông từ trên Vincom Bà Triệu buổi đêm" },
+          { time: 77.78, en: "Thì em tự nhiên ngồi cạnh lò sưởi xong rồi khóc lóc vì ghen" },
+          { time: 80.38, en: "Anh đưa em LV Bag, lúc em buồn em thích nó" },
+          { time: 83.24, en: "Đầu bếp anh làm thịt cừu, lúc em buồn em thích nó" },
+          { time: 86.16, en: "Em chơi trong biệt thự Vin của anh để nỗi buồn vứt xó" },
+          { time: 88.75, en: "Nhưng sáng hôm sau thức dậy thì cái nắm tay cũng không cho" },
+          { time: 91.44, en: "Xong lại uh, đẩy anh đi ra xa" },
+          { time: 94.01, en: "Bỏ anh ở trong căn phòng toàn nhạc của Frank Sinatra" },
+          { time: 96.97, en: "Em quay lại ăn chơi với đám bạn ở Circle K" },
+          { time: 99.82, en: "Đi theo mấy thằng rapper ngoài đường uống bia trên hồ Tây" },
+          { time: 102.58, en: "Tại sao em cứ đâm đầu vào mấy thằng con trai trong hood?" },
+          { time: 105.74, en: "Nghệ sĩ nhà tập thể, tuy bất cần nhưng nó cuốn hút" },
+          { time: 108.38, en: "Rồi lúc nó chán em theo con khác thì anh lại phải đón em" },
+          { time: 111.21, en: "Anh chán nghe chuyện drama, nhưng vì em mà phải đón xem" },
+          { time: 113.64, en: "Sao lúc vui em bao giờ cũng đang bận?" },
+          { time: 116.73, en: "Lúc bên anh bao giờ cũng đang giận?" },
+          { time: 119.61, en: "Nói chung anh chỉ là thuốc an thần" },
+          { time: 122.37, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 125.27, en: "Nói em không nên dùng quá hai lần" },
+          { time: 128.06, en: "Nói em chỉ nên dùng lúc em cần" },
+          { time: 130.72, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 133.67, en: "Với em anh chỉ là thuốc an thần" },
+          { time: 136.52, en: "Với em anh chỉ là..." },
+          { time: 141.9, en: "Tại sao lúc vui em bao giờ..." },
+          { time: 147.44, en: "Tại sao lúc vui em bao giờ..." },
+          { time: 160.0, en: "(Giai điệu kết thúc...)" },
+          { time: 171.0, en: "Chúc Ngọc Anh 20/10 luôn rạng ngời và hạnh phúc ✨" }
         ]
       }
     ];
@@ -5875,22 +5900,17 @@
 
       lyrics.forEach((item, index) => {
         const lineEl = document.createElement('div');
-        const dist = index - initialIdx;
-        let distClass = 'lyric-distant';
-        if (dist === 0) distClass = 'active';
-        else if (dist === -1) distClass = 'lyric-prev';
-        else if (dist === 1) distClass = 'lyric-next';
-
-        lineEl.className = `mobile-lyric-item ${distClass}`;
+        const isActive = (index === initialIdx);
+        lineEl.className = `mobile-lyric-item ${isActive ? 'active' : ''}`;
+        lineEl.style.display = isActive ? 'block' : 'none';
         lineEl.dataset.index = index;
         lineEl.dataset.time = item.time;
-        lineEl.textContent = item.en;
+        const viText = item.vi || (item.en && item.en.includes('^') ? item.en.split('^')[0].trim() : item.en);
+        lineEl.textContent = viText;
         trackEl.appendChild(lineEl);
       });
 
-      requestAnimationFrame(() => {
-        scrollMobileLyrics(initialIdx, true);
-      });
+      scrollMobileLyrics(initialIdx, true);
     }
 
     function scrollMobileLyrics(idx, isImmediate = false) {
@@ -5902,34 +5922,23 @@
       if (idx < 0) idx = 0;
       if (idx >= items.length) idx = items.length - 1;
 
+      trackEl.style.transform = 'none';
+
       items.forEach((item, i) => {
-        const dist = i - idx;
-        item.classList.remove('active', 'lyric-prev', 'lyric-next', 'lyric-distant');
-        if (dist === 0) {
+        if (i === idx) {
+          const wasActive = item.classList.contains('active') && item.style.display !== 'none';
           item.classList.add('active');
-        } else if (dist === -1) {
-          item.classList.add('lyric-prev');
-        } else if (dist === 1) {
-          item.classList.add('lyric-next');
+          item.style.display = 'block';
+          if (!wasActive && !isImmediate) {
+            item.style.animation = 'none';
+            void item.offsetHeight;
+            item.style.animation = 'mobileLyricFadeIn 0.35s ease-out';
+          }
         } else {
-          item.classList.add('lyric-distant');
+          item.classList.remove('active', 'lyric-prev', 'lyric-next', 'lyric-distant');
+          item.style.display = 'none';
         }
       });
-
-      const activeEl = items[idx];
-      if (activeEl) {
-        const containerH = mobileLyricsContent.clientHeight || 28;
-        const targetScroll = (activeEl.offsetTop + (activeEl.offsetHeight / 2)) - (containerH / 2);
-
-        if (isImmediate) {
-          trackEl.style.transition = 'none';
-          trackEl.style.transform = `translate3d(0, -${Math.round(targetScroll)}px, 0)`;
-          void trackEl.offsetHeight;
-          trackEl.style.transition = 'transform 800ms cubic-bezier(0.22, 1, 0.36, 1)';
-        } else {
-          trackEl.style.transform = `translate3d(0, -${Math.round(targetScroll)}px, 0)`;
-        }
-      }
     }
 
     // Alias for compatibility
@@ -6017,12 +6026,12 @@
       if (playerTime) playerTime.textContent = `${formatTime(cur)} / ${formatTime(dur)}`;
     }
 
-    function updateLyrics() {
+    function updateLyrics(forcedTime = null) {
       if (!bgMusic) return;
       const track = PLAYLIST[currentTrackIndex];
       if (!track || !track.lyrics || track.lyrics.length === 0) return;
       const lyrics = track.lyrics;
-      const currTime = (bgMusic && !isNaN(bgMusic.currentTime) && bgMusic.currentTime > 0) ? bgMusic.currentTime : 0;
+      const currTime = (forcedTime !== null && !isNaN(forcedTime)) ? forcedTime : ((bgMusic && !isNaN(bgMusic.currentTime) && bgMusic.currentTime > 0) ? bgMusic.currentTime : 0);
       let idx = 0;
       if (currTime > 0) {
         for (let i = lyrics.length - 1; i >= 0; i--) {
@@ -6045,6 +6054,7 @@
         renderMobileLyrics(idx);
       }
     }
+    window.updateLyrics = updateLyrics;
 
     // =========================================================
     // QUẢN LÝ LƯU TRẠNG THÁI & VỊ TRÍ PHÁT NHẠC (LOCAL STORAGE)

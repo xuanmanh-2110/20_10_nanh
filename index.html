@@ -3697,6 +3697,7 @@
 
     renderDesktopLyrics();
     initMobileLyrics();
+    restoreSavedAudioState();
 
     window.addEventListener('resize', () => {
       if (currentLyricIndex >= 0) {
@@ -3752,7 +3753,61 @@
       }
     }
 
-    // Tối ưu hiệu năng: Đồng bộ lời bài hát & thanh tiến trình qua requestAnimationFrame chỉ khi nhạc đang phát
+    // =========================================================
+    // QUẢN LÝ LƯU TRẠNG THÁI & VỊ TRÍ PHÁT NHẠC (LOCAL STORAGE)
+    // =========================================================
+    const PLAYER_STORAGE_KEY = '2010nanh_audio_state';
+    let lastSavedTime = 0;
+
+    function saveAudioState() {
+      if (!bgMusic) return;
+      try {
+        const curTime = (!isNaN(bgMusic.currentTime) && bgMusic.currentTime > 0) ? bgMusic.currentTime : 0;
+        const state = {
+          trackIndex: currentTrackIndex,
+          trackId: PLAYLIST[currentTrackIndex] ? PLAYLIST[currentTrackIndex].id : 'somebodys_pleasure',
+          currentTime: curTime,
+          savedAt: Date.now()
+        };
+        localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(state));
+      } catch (e) { }
+    }
+
+    function restoreSavedAudioState() {
+      try {
+        const raw = localStorage.getItem(PLAYER_STORAGE_KEY);
+        if (!raw) return;
+        const state = JSON.parse(raw);
+        if (state && typeof state.trackIndex === 'number' && state.trackIndex >= 0 && state.trackIndex < PLAYLIST.length) {
+          currentTrackIndex = state.trackIndex;
+          const track = PLAYLIST[currentTrackIndex];
+          if (track && bgMusic) {
+            bgMusic.src = track.src;
+            if (typeof state.currentTime === 'number' && !isNaN(state.currentTime) && state.currentTime > 0) {
+              try {
+                bgMusic.currentTime = state.currentTime;
+              } catch (err) { }
+              hasStartedAudioOnce = true;
+            }
+            if (playerSongTitle) playerSongTitle.textContent = track.title;
+            if (playerArtist) playerArtist.textContent = track.artist;
+            if (playerDiscCover) playerDiscCover.src = track.cover;
+            if (playerTrackBadge) playerTrackBadge.textContent = `Bài ${currentTrackIndex + 1} / ${PLAYLIST.length}`;
+            if (lyricsCardBadge) lyricsCardBadge.textContent = `LỜI BÀI HÁT · ${track.title.toUpperCase()}`;
+
+            currentLyricIndex = 0;
+            renderDesktopLyrics();
+            initMobileLyrics(0);
+            updateAudioProgress();
+            updateLyrics();
+          }
+        }
+      } catch (e) { }
+    }
+
+    // =========================================================
+    // ĐỒNG BỘ TIẾN TRÌNH AUDIO & LỜI BÀI HÁT (CHỈ CHẠY KHI ĐANG PHÁT)
+    // =========================================================
     let audioSyncRaf = null;
 
     function audioSyncLoop() {
@@ -3785,14 +3840,66 @@
       bgMusic.addEventListener('ended', stopAudioSync);
       bgMusic.addEventListener('timeupdate', () => {
         if (!audioSyncRaf) updateLyrics();
+        if (Math.abs(bgMusic.currentTime - lastSavedTime) > 3) {
+          lastSavedTime = bgMusic.currentTime;
+          saveAudioState();
+        }
       });
     }
 
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
+    // =========================================================
+    // XỬ LÝ BACKGROUND & RỜI KHỎI TRÌNH DUYỆT (STRICT PAUSE RULES)
+    // - Chuyển sang app khác -> PAUSE nhạc
+    // - Rời khỏi Safari / đổi tab -> PAUSE nhạc
+    // - Khóa màn hình -> PAUSE nhạc
+    // - Khi quay lại -> KHÔNG tự động play, giữ PAUSED, hiển thị nút Play
+    // =========================================================
+    function handleBackgroundPause() {
+      if (bgMusic && !bgMusic.paused) {
+        pauseMusic();
+      } else {
+        saveAudioState();
         stopAudioSync();
-      } else if (bgMusic && !bgMusic.paused) {
-        startAudioSync();
+      }
+    }
+
+    function handleForegroundReturn() {
+      // Tuyệt đối KHÔNG tự động play!
+      // Giữ nguyên trạng thái PAUSED, cập nhật chính xác UI theo bgMusic.currentTime
+      if (bgMusic && !bgMusic.paused) {
+        pauseMusic();
+      }
+      stopAudioSync();
+      updateAudioProgress();
+      updateLyrics();
+      if (musicPlayerCard) {
+        musicPlayerCard.classList.remove('playing');
+      }
+    }
+
+    // 1. visibilitychange: Chuyển tab, đổi app, khóa màn hình
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        handleBackgroundPause();
+      } else if (document.visibilityState === 'visible') {
+        handleForegroundReturn();
+      }
+    });
+
+    // 2. pagehide: Khi chuyển trang, đóng tab, đưa Safari xuống nền
+    window.addEventListener('pagehide', () => {
+      handleBackgroundPause();
+    });
+
+    // 3. pageshow: Khi người dùng quay lại Safari (kể cả khôi phục từ bfcache)
+    window.addEventListener('pageshow', () => {
+      handleForegroundReturn();
+    });
+
+    // 4. blur: Khi mất focus hoàn toàn khỏi cửa sổ Safari
+    window.addEventListener('blur', () => {
+      if (document.visibilityState === 'hidden') {
+        handleBackgroundPause();
       }
     });
 
@@ -3900,6 +4007,10 @@
       if (musicPlayerCard) {
         musicPlayerCard.classList.remove('playing');
       }
+      stopAudioSync();
+      saveAudioState();
+      updateAudioProgress();
+      updateLyrics();
     }
 
     function toggleMusic() {

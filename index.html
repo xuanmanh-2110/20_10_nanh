@@ -1558,22 +1558,29 @@
         gap: 5px;
       }
 
-      /* Main Scene locked to remaining viewport height without scrolling */
+      /* Main Scene: tự điều chỉnh mượt mà theo viewport iPhone Safari */
       .scene {
         width: 100% !important;
         max-width: min(380px, 96vw) !important;
         flex: 1 1 auto !important;
         min-height: 0 !important;
-        max-height: calc(100dvh - 65px) !important;
-        overflow: hidden !important;
+        max-height: calc(100dvh - 60px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        gap: 5px !important;
         position: relative !important;
         margin: 0 auto !important;
-        padding: 0 0 2px !important;
+        padding: 0 0 max(8px, env(safe-area-inset-bottom)) !important;
         box-sizing: border-box !important;
+      }
+      .scene::-webkit-scrollbar {
+        display: none;
       }
 
       .letter-player-group {
@@ -1606,15 +1613,43 @@
         padding: 11px 14px 9px !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        height: 226px !important;
-        min-height: 226px !important;
-        max-height: 226px !important;
         transform: none !important;
         border-radius: 16px !important;
         overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
+      }
+
+      .letter.unsealed {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: clamp(155px, 23vh, 185px) !important;
+        padding: 8px 12px 6px !important;
+        border-radius: 14px !important;
+        justify-content: flex-start !important;
+        gap: 2px !important;
+      }
+
+      .letter.unsealed .letter-badge {
+        font-size: 0.58rem !important;
+        margin-bottom: 1px !important;
+      }
+
+      .letter.unsealed h2 {
+        font-size: 1.15rem !important;
+        margin: 0 0 1px !important;
+      }
+
+      .letter.unsealed p {
+        font-size: 0.67rem !important;
+        line-height: 1.28 !important;
+        margin: 0 0 2px !important;
+      }
+
+      .letter.unsealed .signature {
+        font-size: 0.78rem !important;
+        margin-top: 1px !important;
       }
 
       .letter-player-group.sealed-center .letter.sealed {
@@ -1687,9 +1722,9 @@
       }
 
       .music-player-card {
-        padding: 7px 10px;
-        border-radius: 14px;
-        gap: 5px;
+        padding: 5px 9px !important;
+        border-radius: 12px !important;
+        gap: 3px !important;
       }
 
       .music-player-card.hidden {
@@ -1697,87 +1732,92 @@
       }
 
       .player-disc-wrapper {
-        width: 38px;
-        height: 38px;
+        width: 32px !important;
+        height: 32px !important;
       }
 
       .player-disc {
-        width: 38px;
-        height: 38px;
+        width: 32px !important;
+        height: 32px !important;
       }
 
       .player-track-badge {
-        font-size: 0.56rem;
-        padding: 1px 4px;
-        margin-bottom: 1px;
+        font-size: 0.54rem !important;
+        padding: 1px 4px !important;
+        margin-bottom: 0px !important;
       }
 
       .player-song-title {
-        font-size: 0.82rem;
-        line-height: 1.15;
+        font-size: 0.76rem !important;
+        line-height: 1.1 !important;
       }
 
       .player-artist {
-        font-size: 0.70rem;
+        font-size: 0.64rem !important;
       }
 
       .player-controls {
-        gap: 4px;
+        gap: 3px !important;
       }
 
       .player-nav-btn {
-        width: 24px;
-        height: 24px;
+        width: 22px !important;
+        height: 22px !important;
       }
 
       .player-nav-btn svg {
-        width: 10px;
-        height: 10px;
+        width: 10px !important;
+        height: 10px !important;
       }
 
       .player-play-btn {
-        width: 32px;
-        height: 32px;
+        width: 28px !important;
+        height: 28px !important;
       }
 
       .player-play-btn svg {
-        width: 14px;
-        height: 14px;
+        width: 12px !important;
+        height: 12px !important;
       }
 
       .player-progress-row {
-        gap: 8px;
+        gap: 6px !important;
       }
 
       .player-progress-bar {
-        height: 4px;
+        height: 3.5px !important;
       }
 
       .player-progress-thumb {
-        width: 9px;
-        height: 9px;
-        right: -4.5px;
+        width: 8px !important;
+        height: 8px !important;
+        right: -4px !important;
       }
 
       .player-time {
-        font-size: 0.66rem;
+        font-size: 0.62rem !important;
       }
 
       .player-mobile-lyrics {
         display: flex !important;
-        padding-top: 4px;
-        gap: 6px;
+        padding-top: 1px !important;
+        gap: 4px !important;
       }
 
       .mobile-lyrics-content {
-        height: 44px;
+        height: 22px !important;
+      }
+
+      .mobile-lyric-item {
+        font-size: 0.70rem !important;
+        line-height: 22px !important;
       }
 
       .desktop-lyrics-col {
         display: none !important;
       }
 
-      /* Trên mobile, cây hoa anh đào to và nổi bật, là điểm nhấn ở nửa dưới màn hình */
+      /* Trên mobile: cây hiển thị trọn vẹn từ ngọn đến gốc và thảm hoa, không bị che khuất */
       .tree {
         position: relative !important;
         left: auto !important;
@@ -1785,15 +1825,25 @@
         bottom: auto !important;
         top: auto !important;
         transform: none !important;
-        width: clamp(300px, 88vw, 520px) !important;
-        height: clamp(300px, 88vw, 520px) !important;
-        margin: -8px auto 0 auto !important;
+        width: min(88vw, 360px) !important;
+        height: min(44vh, 320px) !important;
+        max-height: calc(100dvh - 305px) !important;
+        aspect-ratio: 1 / 1 !important;
+        margin: -2px auto 0 auto !important;
         pointer-events: none;
         z-index: 10;
         opacity: 0 !important;
         visibility: hidden !important;
-        flex-shrink: 0;
+        flex-shrink: 1 !important;
         transition: opacity 0.35s ease, visibility 0.35s ease;
+      }
+
+      #treeCanvas {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        object-position: bottom center !important;
+        display: block !important;
       }
 
       .tree:not(.blooming) {
@@ -2196,10 +2246,162 @@
     body.dark-mode .ambient-bokeh-container {
       display: none !important;
     }
+
+    /* =========================================================
+       LỜI NHẮC NHỞ CHẾ ĐỘ SÁNG (LIGHT MODE TOAST NOTIFICATION)
+       ========================================================= */
+    .light-mode-toast {
+      position: fixed;
+      bottom: 24px;
+      top: auto;
+      left: 50%;
+      transform: translate3d(-50%, 24px, 0);
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px 8px 12px;
+      background: rgba(255, 252, 254, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(244, 114, 182, 0.45);
+      border-radius: 999px;
+      box-shadow: 0 10px 28px rgba(190, 24, 93, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+      color: #881337;
+      font-size: 0.82rem;
+      max-width: min(520px, 92vw);
+      box-sizing: border-box;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.45s;
+    }
+
+    .light-mode-toast.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    .light-mode-toast .toast-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fef08a 0%, #f472b6 100%);
+      color: #881337;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+    }
+
+    .light-mode-toast .toast-text {
+      flex: 1;
+      line-height: 1.35;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .light-mode-toast .toast-text strong {
+      color: #be123c;
+      font-weight: 700;
+    }
+
+    .light-mode-toast .toast-text span {
+      color: #be123c;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-color: rgba(244, 114, 182, 0.6);
+      text-underline-offset: 2px;
+    }
+
+    .light-mode-toast .toast-close-btn {
+      flex-shrink: 0;
+      background: rgba(244, 114, 182, 0.18);
+      border: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9d4c68;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .light-mode-toast .toast-close-btn:hover {
+      background: rgba(190, 24, 93, 0.25);
+      color: #881337;
+      transform: scale(1.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .light-mode-toast {
+        background: rgba(255, 240, 246, 0.98) !important;
+        border-color: rgba(244, 114, 182, 0.6) !important;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(244, 114, 182, 0.25) !important;
+        color: #881337 !important;
+      }
+    }
+
+    body.dark-mode .light-mode-toast {
+      background: rgba(255, 240, 246, 0.98) !important;
+      border-color: rgba(244, 114, 182, 0.6) !important;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(244, 114, 182, 0.25) !important;
+      color: #881337 !important;
+    }
+
+    @media (max-width: 600px) {
+      .light-mode-toast {
+        bottom: 16px;
+        top: auto;
+        padding: 7px 11px 7px 9px;
+        font-size: 0.76rem;
+        gap: 7px;
+        width: min(360px, 94vw);
+      }
+      .light-mode-toast .toast-icon {
+        width: 22px;
+        height: 22px;
+      }
+      .light-mode-toast .toast-icon svg {
+        width: 13px;
+        height: 13px;
+      }
+      .light-mode-toast .toast-close-btn {
+        width: 20px;
+        height: 20px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Lời nhắc nhở chế độ sáng (Light Mode Tip) -->
+  <aside class="light-mode-toast" id="lightModeToast" role="status" aria-live="polite">
+    <div class="toast-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+      </svg>
+    </div>
+    <div class="toast-text">
+      <strong>Gợi ý:</strong> Bạn nên để giao diện ở <span>chế độ sáng</span> thì website sẽ hiển thị đẹp và lung linh nhất nhé! ✨
+    </div>
+    <button class="toast-close-btn" id="toastCloseBtn" aria-label="Đóng thông báo" title="Đóng">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </aside>
+
 
   <!-- Nền đom đóm & Bokeh bồng bềnh -->
   <div class="ambient-bokeh-container" aria-hidden="true">
@@ -4253,6 +4455,7 @@
     function openGiftAndBloom() {
       if (isExperienceOpened) return;
       isExperienceOpened = true;
+      hideLightModeToast();
 
       const seal = document.getElementById('waxSeal');
       const sealWrapper = document.getElementById('waxSealWrapper');
@@ -4389,18 +4592,62 @@
       });
     }
 
-    // Lock viewport scroll on mobile: allow slider/buttons, but prevent page pull/rubber-band scroll
+    // Allow smooth natural touch scrolling inside .scene and player controls while preventing rubber-band pull on root
     window.addEventListener('touchmove', (e) => {
-      if (!e.target.closest('#playerProgressBar') && !e.target.closest('.desktop-lyrics-window')) {
-        e.preventDefault();
+      if (e.target.closest('#scene') || e.target.closest('#playerProgressBar') || e.target.closest('.desktop-lyrics-window')) {
+        return; // Allow native smooth touch
       }
+      e.preventDefault();
     }, { passive: false });
 
     // Check URL parameter for theme testing (e.g. ?theme=dark)
-    const themeParam = new URLSearchParams(window.location.search).get('theme');
-    if (themeParam === 'dark') {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('theme') === 'dark') {
       document.body.classList.add('dark-mode');
     }
+    if (urlParams.get('open') === 'true') {
+      setTimeout(openGiftAndBloom, 100);
+    }
+
+
+    // =========================================================
+    // LỜI NHẮC NHỞ CHẾ ĐỘ SÁNG (LIGHT MODE TOAST)
+    // =========================================================
+    let toastDismissTimer = null;
+    function hideLightModeToast() {
+      const toast = document.getElementById('lightModeToast');
+      if (!toast) return;
+      if (toastDismissTimer) clearTimeout(toastDismissTimer);
+      toast.classList.remove('visible');
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 500);
+    }
+
+    function initLightModeToast() {
+      const toast = document.getElementById('lightModeToast');
+      const closeBtn = document.getElementById('toastCloseBtn');
+      if (!toast) return;
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          hideLightModeToast();
+        });
+      }
+
+      // Hiện lời nhắc nhở nhẹ nhàng sau 500ms khi vào trang
+      setTimeout(() => {
+        toast.classList.add('visible');
+
+        // Tự động ẩn êm dịu sau 8 giây nếu chưa đóng
+        toastDismissTimer = setTimeout(() => {
+          hideLightModeToast();
+        }, 8000);
+      }, 500);
+    }
+
+    initLightModeToast();
 
   </script>
 

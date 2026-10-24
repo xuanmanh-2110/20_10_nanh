@@ -6165,15 +6165,42 @@
     }
 
     // =========================================================
-    // ĐỒNG BỘ TIẾN TRÌNH AUDIO & LỜI BÀI HÁT (CHỈ CHẠY KHI ĐANG PHÁT)
+    // ĐỒNG BỘ TIẾN TRÌNH AUDIO, LỜI BÀI HÁT & TỰ ĐỘNG CHUYỂN BÀI
     // =========================================================
     let audioSyncRaf = null;
+    let isTransitioningTrack = false;
+
+    function handleTrackEnd() {
+      if (isTransitioningTrack) return;
+      isTransitioningTrack = true;
+      switchTrack(currentTrackIndex + 1, true);
+      setTimeout(() => {
+        isTransitioningTrack = false;
+      }, 1000);
+    }
+
+    function checkTrackEndGuard() {
+      if (!bgMusic || isTransitioningTrack || !hasStartedAudioOnce) return;
+      const track = PLAYLIST[currentTrackIndex];
+      const dur = (track && track.duration) ? track.duration : (bgMusic.duration || 0);
+      if (!dur || dur <= 0) return;
+
+      const cur = bgMusic.currentTime;
+      // Tự động chuyển bài khi hết nhạc (đảm bảo chuyển mượt cả khi trình duyệt không bắn event 'ended')
+      if (bgMusic.ended || (cur > 5 && (cur >= dur - 0.4 || (bgMusic.duration && cur >= bgMusic.duration - 0.4)))) {
+        handleTrackEnd();
+      }
+    }
 
     function audioSyncLoop() {
       if (!bgMusic || bgMusic.paused || bgMusic.ended) {
+        if (bgMusic && bgMusic.ended) {
+          checkTrackEndGuard();
+        }
         audioSyncRaf = null;
         return;
       }
+      checkTrackEndGuard();
       updateLyrics();
       audioSyncRaf = requestAnimationFrame(audioSyncLoop);
     }
@@ -6196,8 +6223,12 @@
       bgMusic.addEventListener('play', startAudioSync);
       bgMusic.addEventListener('playing', startAudioSync);
       bgMusic.addEventListener('pause', stopAudioSync);
-      bgMusic.addEventListener('ended', stopAudioSync);
+      bgMusic.addEventListener('ended', () => {
+        stopAudioSync();
+        handleTrackEnd();
+      });
       bgMusic.addEventListener('timeupdate', () => {
+        checkTrackEndGuard();
         if (!audioSyncRaf) updateLyrics();
         if (Math.abs(bgMusic.currentTime - lastSavedTime) > 3) {
           lastSavedTime = bgMusic.currentTime;
@@ -6347,12 +6378,13 @@
       currentTrackIndex = index;
       const track = PLAYLIST[currentTrackIndex];
 
-      const wasPlaying = !bgMusic.paused;
+      const wasPlaying = !bgMusic.paused || isTransitioningTrack;
+      stopAudioSync();
+
       bgMusic.src = track.src;
       try {
         bgMusic.currentTime = 0;
       } catch (e) { }
-      bgMusic.load();
 
       if (playerSongTitle) playerSongTitle.textContent = track.title;
       if (playerArtist) playerArtist.textContent = track.artist;
@@ -6371,18 +6403,27 @@
       updateAudioProgress();
 
       if (autoPlay || wasPlaying) {
-        bgMusic.play().then(() => {
-          if (musicPlayerCard) {
-            musicPlayerCard.classList.remove('hidden');
-            musicPlayerCard.classList.add('playing');
-          }
-        }).catch((err) => {
-          console.warn('Playback error:', err);
-        });
+        const playPromise = bgMusic.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            if (musicPlayerCard) {
+              musicPlayerCard.classList.remove('hidden');
+              musicPlayerCard.classList.add('playing');
+            }
+            startAudioSync();
+          }).catch((err) => {
+            console.warn('Playback error:', err);
+            if (musicPlayerCard) {
+              musicPlayerCard.classList.remove('playing');
+            }
+            stopAudioSync();
+          });
+        }
       } else {
         if (musicPlayerCard) {
           musicPlayerCard.classList.remove('playing');
         }
+        stopAudioSync();
       }
 
       updateAudioProgress();
@@ -7177,7 +7218,7 @@
 
     if (bgMusic) {
       bgMusic.addEventListener('ended', () => {
-        switchTrack(currentTrackIndex + 1, true);
+        handleTrackEnd();
       });
     }
 
